@@ -3,6 +3,6 @@ Alpha OS is a simple 16 bit operating system that illustrates the basic concepts
 
 #Instructions: 
 
-I am extremely sorry for only including the source code. Within a day or two documentation along with config files will be uploaded. Meanwhile enjoy the code
+I am extremely sorry for only including the source code. Within a day or two documentation along with config files and tutorials for understanding the code will be uploaded. Meanwhile enjoy the code
 
 Happy Coding
