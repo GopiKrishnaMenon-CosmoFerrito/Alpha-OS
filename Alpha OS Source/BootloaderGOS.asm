@@ -8,12 +8,11 @@
 
 BITS 16 						; Real Mode
 
+;kern_ptr is defined for some special purposes here while loading kernel sectors please do not tamper with it!
+kern_ptr: jmp 	short bootloader_start  ; Jump to the bootloader_start routine after skipping data ( ! Processing data is really dangerous) 
 
-jmp 	short bootloader_start  ; Jump to the bootloader_start routine after skipping data ( ! Processing data is really dangerous) 
-
-
-nop 							; Consumes one cycle ( Old Style)
-
+nop
+;kern_ptr db 0
 
 
 ;/////////////////////////////////////////////////////////////////////
@@ -102,12 +101,7 @@ floppy_success:
 	call 	search_kernel 			; Search for Kernel Address (First Logical Cluster ) in the root directory
 	call 	load_fat 				; Load file allocation table into the memory ( Overwritten at where the directory was to save space)
   	call 	read_fat 				; Load the Alpha Interface Manager into the memory for Execution
-  	mov 	bx,ds					; A small trick to make the jump literally successful !!
- 	shl 	bx,4
- 	add 	bx,buffer
- 	add 	bx,1200H 			  	; Size of FAT (9*512=4608(1200H))
- 	jmp 	bx  				    ; Jumps to 9000 ( Calculation : 7E00(Bootloader Ends here)+1200=9000)
- 	
+  	jmp     2000H:0000H	 			; Jump to KERNEL!
 		
 
 ; Input : AX contains the cluster number to be accessed
@@ -213,11 +207,16 @@ load_fat:
 
 ; IN : AX contains the logical  cluster number  for the first cluster
 read_fat:
-	mov 	di,4608 		; Address Where KERNEL will be stored( Pointer to Kernel)
+	;mov 	di,4608 		; Address Where KERNEL will be stored( Pointer to Kernel)
+	 xor  	di,di
+	 mov 	bx,2000H
+	 mov 	es,bx
 	
 	.routine:
 	; Load the kernel data from the logical cluster of fat
-	lea 	bx,[buffer+di] 	;For loading each sector
+	;lea 	bx,[buffer+di] 	;For loading each sector
+    lea  	bx,[kern_ptr+di]
+   
 	call 	load_data 		; Load the data into the input buffer as specified above
 	add 	di,512 			; 1 Sector= 512 bytes
   

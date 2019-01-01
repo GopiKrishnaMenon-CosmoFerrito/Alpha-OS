@@ -11,11 +11,13 @@
 BITS 16 		; Real Mode
 
 ;////////////////////////////////////////////////////////////////////
+xchg    bx,bx
+
 
 bootloader_start:
 
 ; Initializing the data segment register for proper addressing
-	mov 	ax,0x900 				; Replace the data segment address with  new one for Alpha Interface manager
+	mov 	ax,0x2000 				; Replace the data segment address with  new one for Alpha Interface manager
 	mov 	ds,ax
 	
 	
